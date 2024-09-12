@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login Page</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body>
+    <div
+      class="main w-full h-screen bg-zinc-800 flex justify-center items-center text-white"
+    >
+      <div class="border-2 border-zinc-700 rounded-md p-5 w-1/4">
+        <h3 class="text-2xl font-semibold tracking-wide text-center">Login</h3>
+        <form class="" autocomplete="off" action="/login" method="post">
+          <div class="my-2">
+            <label for="username">Username:</label>
+            <input
+              class="block w-full bg-transparent border-2 border-zinc-600 rounded-md px-3 py-2"
+              type="text"
+              placeholder="Username"
+              required
+              id="username"
+              name="username"
+            />
+          </div>
+
+          <div class="my-2">
+            <label for="password">Password:</label>
+            <input
+              class="block w-full bg-transparent border-2 border-zinc-600 rounded-md px-3 py-2"
+              type="password"
+              placeholder="Password"
+              required
+              id="password"
+              name="password"
+            />
+          </div>
+
+          <input
+            class="bg-blue-500 px-5 py-3 rounded-lg block m-auto cursor-pointer"
+            type="submit"
+            value="Login"
+          />
+        </form>
+        <p class="text-center mt-4 text-sm">
+          Don't have an account?
+          <a href="/register" class="text-blue-400 hover:underline"
+            >Create one</a
+          >
+        </p>
+      </div>
+    </div>
+  </body>
+</html>
