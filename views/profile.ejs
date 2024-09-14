@@ -19,17 +19,29 @@
         class="bg-red-500 absolute px-3 py-2 rounded-md top-0 right-0"
         >Logout</a
       >
+      <a href="/" class="bg-blue-500 absolute px-3 py-2 top-0 left-0 rounded-md" >Home</a>
       <div class="w-1/2 h-full m-auto flex flex-col gap-3">
         <div class="profile flex gap-5 p-10">
-          <div
-            class="img w-40 h-40 bg-zinc-700 overflow-hidden shrink-0 rounded-full"
-          >
-            <img
-              src="/images/<%= user.profilepic %>"
-              alt="Profile"
-              class="object-cover h-full w-full"
-            />
+          <div class="flex flex-col">
+            <div
+              class="img w-40 h-40 bg-zinc-700 overflow-hidden shrink-0 rounded-full"
+            >
+              <img
+                src="/images/profiles/<%= user.profilepic %>"
+                alt="Profile"
+                class="object-cover h-full w-full"
+              />
+            </div>
+            <% if(user.profilepic != "default.png"){ %>
+
+            <a
+              href="/remove/<%= user.profilepic %>"
+              class="border-2 border-zinc-700 rounded-lg text-red-600 text-center"
+              >Remove Profile</a
+            >
+            <% } %>
           </div>
+
           <div class="flex flex-col justify-between">
             <div class="info">
               <h3 class="text-2xl font-bold">@<%= user.username %></h3>
@@ -53,9 +65,15 @@
 
         <div class="line h-1 bg-zinc-700"></div>
         <div class="posts overflow-auto">
-          <% user.posts.reverse().forEach(post => { %>
+          <% if(user.posts.length > 0){ %> <%
+          user.posts.reverse().forEach((post) => { %>
           <div class="post w-full p-5 border-2 border-zinc-500 rounded-lg my-5">
-            <h3 class="font-semibold text-md">@<%= user.username%></h3>
+            <div class="flex justify-between">
+              <h3 class="font-semibold text-md">@<%= user.username%></h3>
+              <p class="text-zinc-600">
+                <%= time(Date.now() - post.timestamp) %>
+              </p>
+            </div>
             <p class="text-lg my-3"><%=post.post%></p>
             <div class="flex justify-between items-center">
               <div class="likes">
@@ -73,7 +91,9 @@
               >
             </div>
           </div>
-          <% })%>
+          <% })%> <% } else { %>
+          <h3 class="text-zinc-500">No posts yet.</h3>
+          <% } %>
         </div>
       </div>
     </div>

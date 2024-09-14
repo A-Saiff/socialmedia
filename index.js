@@ -9,6 +9,7 @@ const cookieParser = require("cookie-parser");
 const path = require("path");
 const multer = require("multer");
 const crypto = require("crypto");
+const fs = require("fs");
 
 const uri = "mongodb://127.0.0.1:27017/socialmedia";
 
@@ -34,8 +35,20 @@ const loggedIn = (req, res, next) => {
   }
 };
 
-app.get("/", loggedIn, (req, res) => {
-  res.render("index");
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const randomIndex = Math.floor(Math.random() * (i + 1)); // Get a random index
+    [array[i], array[randomIndex]] = [array[randomIndex], array[i]]; // Swap elements
+  }
+  return array;
+}
+
+app.get("/", loggedIn, async (req, res) => {
+  await mongoose.connect(uri);
+  let user = await User.findOne({ username: req.user.username });
+  let posts = await Post.find().populate("user");
+  await mongoose.connection.close();
+  res.render("index", { user, posts, time: timeAgo, shuffleArray });
 });
 
 app.get("/register", (req, res) => {
@@ -83,12 +96,33 @@ app.get("/logout", (req, res) => {
   res.redirect("/");
 });
 
+function timeAgo(milliseconds) {
+  const timeIntervals = [
+    { label: "year", milliseconds: 365 * 24 * 60 * 60 * 1000 },
+    { label: "month", milliseconds: 30 * 24 * 60 * 60 * 1000 },
+    { label: "week", milliseconds: 7 * 24 * 60 * 60 * 1000 },
+    { label: "day", milliseconds: 24 * 60 * 60 * 1000 },
+    { label: "hour", milliseconds: 60 * 60 * 1000 },
+    { label: "minute", milliseconds: 60 * 1000 },
+    { label: "second", milliseconds: 1000 },
+  ];
+
+  for (const interval of timeIntervals) {
+    const timePassed = Math.floor(milliseconds / interval.milliseconds);
+    if (timePassed > 0) {
+      return `${timePassed} ${interval.label}${timePassed > 1 ? "s" : ""} ago`;
+    }
+  }
+
+  return "just now"; // When the milliseconds are less than a second
+}
+
 app.get("/profile", loggedIn, async (req, res) => {
   let username = req.user.username;
   await mongoose.connect(uri);
   let user = await User.findOne({ username }).populate("posts");
   await mongoose.connection.close();
-  res.render("profile", { user });
+  res.render("profile", { user, time: timeAgo });
 });
 
 app.post("/login", (req, res) => {
@@ -113,6 +147,16 @@ app.post("/login", (req, res) => {
 
 app.get("/post", loggedIn, (req, res) => {
   res.render("post");
+});
+
+app.get("/remove/:img", loggedIn, async (req, res) => {
+  await mongoose.connect(uri);
+  let user = await User.findOne({ username: req.user.username });
+  user.profilepic = "default.png";
+  await user.save();
+  await mongoose.connection.close();
+  fs.unlinkSync(`./public/images/profiles/${req.params.img}`);
+  res.redirect("/profile");
 });
 
 app.post("/post", loggedIn, async (req, res) => {
@@ -141,7 +185,7 @@ app.get("/like/:id", loggedIn, async (req, res) => {
   }
   await post.save();
   await mongoose.connection.close();
-  res.redirect("/profile");
+  res.redirect("/");
 });
 
 app.get("/edit/:id", loggedIn, async (req, res) => {
@@ -169,7 +213,7 @@ app.get("/profile/edit", loggedIn, async (req, res) => {
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "./public/images");
+    cb(null, "./public/images/profiles");
   },
   filename: function (req, file, cb) {
     crypto.randomBytes(10, (err, bytes) => {
