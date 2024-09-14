@@ -34,7 +34,8 @@
                 class="object-cover h-full w-full"
               />
             </div>
-            <% if(user.profilepic != "default.png"){ %>
+            <% if(user.profilepic != "default.png" && user._id.toString() ==
+            loggedUser._id.toString()){ %>
             <a
               href="/remove/<%= user.profilepic %>"
               class="border-2 border-zinc-700 rounded-lg text-red-600 text-center"
@@ -54,6 +55,7 @@
                 "" %>
               </p>
             </div>
+            <%if(user._id.toString() == loggedUser._id.toString()){%>
             <div>
               <a href="/post" class="bg-blue-500 px-3 py-2 rounded-md mr-5"
                 >Add post</a
@@ -64,6 +66,7 @@
                 >Edit Profile</a
               >
             </div>
+            <% } %>
           </div>
         </div>
 
@@ -88,11 +91,13 @@
                   ><%= post.likes.includes(user._id) ? "Unlike" : "Like" %></a
                 >
               </div>
+              <% if(user._id.toString() == loggedUser._id.toString()) {%>
               <a
                 href="/edit/<%= post._id %>"
                 class="text-yellow-500 font-semibold"
                 >Edit</a
               >
+              <% } %>
             </div>
           </div>
           <% })%> <% } else { %>

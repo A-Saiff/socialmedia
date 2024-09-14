@@ -23,7 +23,9 @@
       <% if(posts.length > 0){ %> <% shuffleArray(posts).forEach((post) => { %>
       <div class="post w-full p-5 border-2 border-zinc-500 rounded-lg my-5">
         <div class="flex justify-between">
-          <h3 class="font-semibold text-md">@<%= post.user.username%></h3>
+          <a href="/user/<%= post.user._id %>">
+            <h3 class="font-semibold text-md">@<%= post.user.username%></h3>
+          </a>
           <p class="text-zinc-600"><%= time(Date.now() - post.timestamp) %></p>
         </div>
         <p class="text-lg my-3"><%=post.post%></p>

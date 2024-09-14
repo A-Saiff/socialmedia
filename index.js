@@ -241,4 +241,12 @@ app.post(
   }
 );
 
+app.get("/user/:id", loggedIn, async (req, res) => {
+  await mongoose.connect(uri);
+  let user = await User.findOne({ _id: req.params.id }).populate("posts");
+  let loggedUser = await User.findOne({ username: req.user.username });
+  await mongoose.connection.close();
+  res.render("user", { user, time: timeAgo, loggedUser });
+});
+
 app.listen(3000);
