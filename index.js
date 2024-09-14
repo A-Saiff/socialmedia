@@ -207,7 +207,7 @@ app.post("/edit/:id", loggedIn, async (req, res) => {
 app.get("/profile/edit", loggedIn, async (req, res) => {
   await mongoose.connect(uri);
   let user = await User.findOne({ username: req.user.username });
-  mongoose.connection.close();
+  await mongoose.connection.close();
   res.render("editprofile", { user });
 });
 
@@ -230,7 +230,7 @@ app.post(
   upload.single("image"),
   async (req, res) => {
     await mongoose.connect(uri);
-    let user = await User.findOneAndUpdate({ username: req.user.username });
+    let user = await User.findOne({ username: req.user.username });
     if (req.file) {
       user.profilepic = req.file.filename;
     }

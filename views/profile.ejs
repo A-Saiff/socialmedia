@@ -19,7 +19,9 @@
         class="bg-red-500 absolute px-3 py-2 rounded-md top-0 right-0"
         >Logout</a
       >
-      <a href="/" class="bg-blue-500 absolute px-3 py-2 top-0 left-0 rounded-md" >Home</a>
+      <a href="/" class="bg-blue-500 absolute px-3 py-2 top-0 left-0 rounded-md"
+        >Home</a
+      >
       <div class="w-1/2 h-full m-auto flex flex-col gap-3">
         <div class="profile flex gap-5 p-10">
           <div class="flex flex-col">
@@ -48,7 +50,10 @@
               <h3 class="text-lg font-semibold my-2 text-zinc-400">
                 <%= user.name %>
               </h3>
-              <p class="text-zinc-300"><%= user.posts.length %> posts</p>
+              <p class="text-zinc-300">
+                <%= user.posts.length %> post<%= user.posts.length != 1 ? "s" :
+                "" %>
+              </p>
             </div>
             <div>
               <a href="/post" class="bg-blue-500 px-3 py-2 rounded-md mr-5"
