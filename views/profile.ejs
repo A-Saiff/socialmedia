@@ -12,22 +12,17 @@
       }
     </style>
   </head>
-  <body>
-    <div class="relative main w-full h-screen bg-zinc-800 text-white">
-      <a
-        href="/logout"
-        class="bg-red-500 absolute px-3 py-2 rounded-md top-0 right-0"
-        >Logout</a
-      >
-      <a href="/" class="bg-blue-500 absolute px-3 py-2 top-0 left-0 rounded-md"
-        >Home</a
-      >
-      <div class="w-1/2 h-full m-auto flex flex-col gap-3">
-        <div class="profile flex gap-5 p-10">
-          <div class="flex flex-col">
-            <div
-              class="img w-40 h-40 bg-zinc-700 overflow-hidden shrink-0 rounded-full"
-            >
+  <body class="bg-zinc-800 text-white">
+    <div class="relative w-full h-screen flex flex-col bg-zinc-800 text-white">
+      <div class="flex justify-between p-4 absolute top-0 w-full">
+        <a href="/" class="bg-blue-500 px-3 py-2 rounded-md">Home</a>
+        <a href="/logout" class="bg-red-500 px-3 py-2 rounded-md">Logout</a>
+      </div>
+
+      <div class="w-full flex-grow flex flex-col items-center mt-16">
+        <div class="w-full max-w-4xl flex flex-col md:flex-row gap-6 p-5">
+          <div class="profile flex flex-col items-center md:items-start gap-5">
+            <div class="img w-40 h-40 bg-zinc-700 overflow-hidden rounded-full">
               <img
                 src="/images/profiles/<%= user.profilepic %>"
                 alt="Profile"
@@ -37,13 +32,13 @@
             <% if(user.profilepic != "default.png"){ %>
             <a
               href="/remove/<%= user.profilepic %>"
-              class="border-2 border-zinc-700 rounded-lg text-red-600 text-center"
+              class="border-2 border-zinc-700 rounded-lg text-red-600 text-center mt-2"
               >Remove Profile</a
             >
             <% } %>
           </div>
 
-          <div class="flex flex-col justify-between">
+          <div class="flex flex-col justify-between flex-grow">
             <div class="info">
               <h3 class="text-2xl font-bold">@<%= user.username %></h3>
               <h3 class="text-lg font-semibold my-2 text-zinc-400">
@@ -54,8 +49,8 @@
                 "" %>
               </p>
             </div>
-            <div>
-              <a href="/post" class="bg-blue-500 px-3 py-2 rounded-md mr-5"
+            <div class="mt-4">
+              <a href="/post" class="bg-blue-500 px-3 py-2 rounded-md mr-3"
                 >Add post</a
               >
               <a
@@ -67,8 +62,9 @@
           </div>
         </div>
 
-        <div class="line h-1 bg-zinc-700"></div>
-        <div class="posts overflow-auto">
+        <div class="line w-full h-1 bg-zinc-700 mt-4"></div>
+
+        <div class="posts w-full max-w-4xl overflow-auto mt-4 p-5">
           <% if(user.posts.length > 0){ %> <%
           user.posts.reverse().forEach((post) => { %>
           <div class="post w-full p-5 border-2 border-zinc-500 rounded-lg my-5">
@@ -78,8 +74,26 @@
                 <%= time(Date.now() - post.timestamp) %>
               </p>
             </div>
-            <p class="text-lg my-3"><%=post.post%></p>
-            <div class="flex justify-between items-center">
+            <p class="text-lg my-3"><%= post.post %></p>
+            <% if(post.media != "") { %>
+            <div class="w-full bg-zinc-700 h-96 overflow-hidden">
+              <% if(getFileType(post.media) == "image") { %>
+              <img
+                src="/posts/<%= post.media %>"
+                class="w-full h-full object-contain"
+              />
+              <% } %> <% if(getFileType(post.media) == "video") { %>
+              <video
+                src="/posts/<%= post.media %>"
+                class="w-full h-full object-contain"
+                autoplay
+                muted
+                loop
+              ></video>
+              <% } %>
+            </div>
+            <% } %>
+            <div class="flex justify-between items-center mt-3">
               <div class="likes">
                 <p class="text-zinc-500"><%= post.likes.length %> likes</p>
                 <a
@@ -95,8 +109,8 @@
               >
             </div>
           </div>
-          <% })%> <% } else { %>
-          <h3 class="text-zinc-500">No posts yet.</h3>
+          <% }) %> <% } else { %>
+          <h3 class="text-zinc-500 text-center">No posts yet.</h3>
           <% } %>
         </div>
       </div>

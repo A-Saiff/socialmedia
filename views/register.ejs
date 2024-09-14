@@ -3,20 +3,18 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Create Account</title>
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
-  <body>
-    <div
-      class="main w-full h-screen bg-zinc-800 flex justify-center items-center text-white"
-    >
-      <div class="border-2 border-zinc-700 rounded-md p-5 w-1/4">
-        <h3 class="text-2xl font-semibold tracking-wide text-center">
+  <body class="bg-zinc-800 text-white">
+    <div class="w-full h-screen flex justify-center items-center">
+      <div class="border-2 border-zinc-700 rounded-md p-6 max-w-sm w-full">
+        <h3 class="text-2xl font-semibold tracking-wide text-center mb-4">
           Create Account
         </h3>
-        <form class="" autocomplete="off" action="/register" method="post">
+        <form autocomplete="off" action="/register" method="post">
           <div class="my-2">
-            <label for="name">Name:</label>
+            <label for="name" class="block text-sm">Name:</label>
             <input
               class="block w-full bg-transparent border-2 border-zinc-600 rounded-md px-3 py-2"
               type="text"
@@ -28,8 +26,7 @@
           </div>
 
           <div class="my-2">
-            <label for="username">Username:</label>
-
+            <label for="username" class="block text-sm">Username:</label>
             <input
               class="block w-full bg-transparent border-2 border-zinc-600 rounded-md px-3 py-2"
               type="text"
@@ -41,7 +38,7 @@
           </div>
 
           <div class="my-2">
-            <label for="password">Password:</label>
+            <label for="password" class="block text-sm">Password:</label>
             <input
               class="block w-full bg-transparent border-2 border-zinc-600 rounded-md px-3 py-2"
               type="password"
@@ -51,8 +48,9 @@
               name="password"
             />
           </div>
+
           <div class="my-2">
-            <label for="email">Email:</label>
+            <label for="email" class="block text-sm">Email:</label>
             <input
               class="block w-full bg-transparent border-2 border-zinc-600 rounded-md px-3 py-2"
               type="email"
@@ -64,8 +62,9 @@
           </div>
 
           <input
-            class="bg-blue-500 px-5 py-3 rounded-lg block m-auto cursor-pointer"
+            class="bg-blue-500 px-5 py-3 rounded-lg block w-full mt-4 cursor-pointer"
             type="submit"
+            value="Register"
           />
         </form>
         <p class="text-center mt-4 text-sm">

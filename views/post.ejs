@@ -3,25 +3,40 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login Page</title>
+    <title>Create Post</title>
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
-  <body>
-    <div
-      class="main w-full h-screen bg-zinc-800 flex justify-center items-center text-white"
-    >
-      <div class="border-2 border-zinc-700 rounded-md p-5 w-1/4">
+  <body class="bg-zinc-800 text-white">
+    <div class="main w-full h-screen flex justify-center items-center">
+      <div class="border-2 border-zinc-700 rounded-md p-5 w-11/12 max-w-md">
         <h3 class="text-2xl font-semibold tracking-wide text-center">
           Create Post
         </h3>
-        <form class="" autocomplete="off" action="/post" method="post">
+        <form
+          autocomplete="off"
+          action="/post"
+          method="post"
+          enctype="multipart/form-data"
+        >
           <textarea
             name="post"
             placeholder="What's on your mind?"
-            class="bg-transparent resize-none border-2 rounded-md border-zinc-900 px-2 py-1 my-4 w-full h-40"
+            class="bg-transparent resize-none border-2 rounded-md border-zinc-900 px-3 py-2 my-4 w-full h-40"
+            required
           ></textarea>
+          <div class="mb-3 border-2 border-zinc-900 rounded-md p-3">
+            <label for="media" class="text-sm text-zinc-400">
+              Upload image or video:
+            </label>
+            <input
+              id="media"
+              class="mt-2 w-full bg-transparent border-2 border-zinc-600 rounded-md px-3 py-2"
+              name="media"
+              type="file"
+            />
+          </div>
           <input
-            class="bg-blue-500 px-5 py-3 rounded-lg block m-auto cursor-pointer"
+            class="bg-blue-500 px-5 py-3 rounded-lg block w-full mt-4 cursor-pointer"
             type="submit"
             value="Upload"
           />

@@ -3,23 +3,35 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login Page</title>
+    <title>Edit Post</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      /* Add custom media queries if necessary */
+      @media (max-width: 768px) {
+        .form-container {
+          width: 90%;
+          padding: 4%;
+        }
+      }
+      @media (max-width: 480px) {
+        .form-container {
+          width: 95%;
+          padding: 2%;
+        }
+      }
+    </style>
   </head>
   <body>
     <div
       class="main w-full h-screen bg-zinc-800 flex justify-center items-center text-white"
     >
-      <div class="border-2 border-zinc-700 rounded-md p-5 w-1/4">
+      <div
+        class="form-container border-2 border-zinc-700 rounded-md p-5 w-11/12 md:w-1/3 lg:w-1/4"
+      >
         <h3 class="text-2xl font-semibold tracking-wide text-center">
           Edit Post
         </h3>
-        <form
-          class=""
-          autocomplete="off"
-          action="/edit/<%= post._id %>"
-          method="post"
-        >
+        <form autocomplete="off" action="/edit/<%= post._id %>" method="post">
           <textarea
             name="post"
             placeholder="What's on your mind?"

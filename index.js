@@ -48,7 +48,13 @@ app.get("/", loggedIn, async (req, res) => {
   let user = await User.findOne({ username: req.user.username });
   let posts = await Post.find().populate("user");
   await mongoose.connection.close();
-  res.render("index", { user, posts, time: timeAgo, shuffleArray });
+  res.render("index", {
+    user,
+    posts,
+    time: timeAgo,
+    shuffleArray,
+    getFileType,
+  });
 });
 
 app.get("/register", (req, res) => {
@@ -96,6 +102,28 @@ app.get("/logout", (req, res) => {
   res.redirect("/");
 });
 
+function getFileType(filename) {
+  // Extract the file extension
+  const fileExtension = filename.split(".").pop().toLowerCase();
+
+  // Define known image and video extensions
+  const imageExtensions = ["jpg", "jpeg", "png", "gif", "bmp", "webp", "svg"];
+  const videoExtensions = ["mp4", "webm", "ogg", "mov", "avi", "flv", "mkv"];
+
+  // Check if the extension belongs to an image
+  if (imageExtensions.includes(fileExtension)) {
+    return "image";
+  }
+
+  // Check if the extension belongs to a video
+  if (videoExtensions.includes(fileExtension)) {
+    return "video";
+  }
+
+  // If the file type is not recognized
+  return "unknown";
+}
+
 function timeAgo(milliseconds) {
   const timeIntervals = [
     { label: "year", milliseconds: 365 * 24 * 60 * 60 * 1000 },
@@ -122,7 +150,7 @@ app.get("/profile", loggedIn, async (req, res) => {
   await mongoose.connect(uri);
   let user = await User.findOne({ username }).populate("posts");
   await mongoose.connection.close();
-  res.render("profile", { user, time: timeAgo });
+  res.render("profile", { user, time: timeAgo, getFileType });
 });
 
 app.post("/login", (req, res) => {
@@ -158,20 +186,37 @@ app.get("/remove/:img", loggedIn, async (req, res) => {
   fs.unlinkSync(`./public/images/profiles/${req.params.img}`);
   res.redirect("/profile");
 });
-
-app.post("/post", loggedIn, async (req, res) => {
-  let { username } = req.user;
-  await mongoose.connect(uri);
-  let user = await User.findOne({ username });
-  let post = await Post.create({
-    user: user._id,
-    post: req.body.post,
-  });
-  user.posts.push(post._id);
-  await user.save();
-  await mongoose.connection.close();
-  res.redirect("/profile");
+const postStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "./public/posts");
+  },
+  filename: function (req, file, cb) {
+    crypto.randomBytes(10, (err, bytes) => {
+      let fn = bytes.toString("hex") + path.extname(file.originalname);
+      cb(null, fn);
+    });
+  },
 });
+
+app.post(
+  "/post",
+  loggedIn,
+  multer({ storage: postStorage }).single("media"),
+  async (req, res) => {
+    let { username } = req.user;
+    await mongoose.connect(uri);
+    let user = await User.findOne({ username });
+    let post = await Post.create({
+      user: user._id,
+      post: req.body.post,
+      media: req.file ? req.file.filename : "",
+    });
+    user.posts.push(post._id);
+    await user.save();
+    await mongoose.connection.close();
+    res.redirect("/profile");
+  }
+);
 
 app.get("/like/:id", loggedIn, async (req, res) => {
   let { username } = req.user;
@@ -246,7 +291,7 @@ app.get("/user/:id", loggedIn, async (req, res) => {
   let user = await User.findOne({ _id: req.params.id }).populate("posts");
   let loggedUser = await User.findOne({ username: req.user.username });
   await mongoose.connection.close();
-  res.render("user", { user, time: timeAgo, loggedUser });
+  res.render("user", { user, time: timeAgo, loggedUser, getFileType });
 });
 
 app.listen(3000);

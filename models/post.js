@@ -5,6 +5,10 @@ const postSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "user",
   },
+  media: {
+    type: String,
+    default: "",
+  },
   post: String,
   timestamp: {
     type: Date,
